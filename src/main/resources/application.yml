@@ -1,3 +1,15 @@
+hike-tracker:
+  images-folder: "images/"
+
+spring:
+  datasource:
+    url: jdbc:sqlite:hiketracker.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+
 logging:
   level:
     org:

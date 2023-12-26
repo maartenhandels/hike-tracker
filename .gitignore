@@ -180,3 +180,5 @@ Temporary Items
 *.db
 
 target/*
+
+images/**
