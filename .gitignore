@@ -182,3 +182,5 @@ Temporary Items
 target/*
 
 images/**
+
+firebase-service-account.json
