@@ -15,9 +15,10 @@ public class FirebaseConfig {
   public void firebaseInit() throws IOException {
     ClassPathResource resource = new ClassPathResource("firebase-service-account.json");
 
-    FirebaseOptions options = FirebaseOptions.builder()
-        .setCredentials(GoogleCredentials.fromStream(resource.getInputStream()))
-        .build();
+    FirebaseOptions options =
+        FirebaseOptions.builder()
+            .setCredentials(GoogleCredentials.fromStream(resource.getInputStream()))
+            .build();
 
     if (FirebaseApp.getApps().isEmpty()) {
       FirebaseApp.initializeApp(options);
