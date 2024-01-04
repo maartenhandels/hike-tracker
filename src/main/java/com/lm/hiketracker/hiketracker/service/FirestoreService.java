@@ -4,12 +4,18 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.gson.Gson;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 public class FirestoreService {
 
@@ -68,5 +74,27 @@ public class FirestoreService {
       }
     }
     return map;
+  }
+
+  public <T> List<T> findAllByCollection(String collectionPath, Class<T> responseClass)
+      throws ExecutionException, InterruptedException {
+    Firestore db = FirestoreClient.getFirestore();
+    ApiFuture<QuerySnapshot> future = db.collection(collectionPath).get();
+    List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+    List<T> results = new ArrayList<>();
+
+    for (DocumentSnapshot document : documents) {
+      T object = document.toObject(responseClass);
+      if (object != null) {
+        try {
+          Method setDocumentIdMethod = responseClass.getMethod("setDocumentId", String.class);
+          setDocumentIdMethod.invoke(object, document.getId());
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+          log.error(e.getMessage());
+        }
+        results.add(object);
+      }
+    }
+    return results;
   }
 }

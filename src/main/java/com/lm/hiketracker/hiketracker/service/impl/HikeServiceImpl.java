@@ -2,6 +2,7 @@ package com.lm.hiketracker.hiketracker.service.impl;
 
 import com.lm.hiketracker.hiketracker.dto.Hike;
 import com.lm.hiketracker.hiketracker.exception.DbCreationException;
+import com.lm.hiketracker.hiketracker.exception.DbReadingException;
 import com.lm.hiketracker.hiketracker.exception.ImageStorageException;
 import com.lm.hiketracker.hiketracker.service.FirestoreService;
 import com.lm.hiketracker.hiketracker.service.HikeService;
@@ -12,6 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +60,15 @@ public class HikeServiceImpl implements HikeService {
       throw new ImageStorageException("Failed to load the Hike from the DB.", e);
     } catch (IOException e) {
       throw new ImageStorageException("Failed to store image.", e);
+    }
+  }
+
+  @Override
+  public List<Hike> getAllHikes() {
+    try {
+      return firestoreService.findAllByCollection(HIKES_COLLECTION, Hike.class);
+    } catch (ExecutionException | InterruptedException e) {
+      throw new DbReadingException("Failed to read from Firestore", e);
     }
   }
 

@@ -17,11 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Log4j2
 @RestController
 @RequestMapping("api/v1/hikes")
-public class HikeController {
+public class HikePostController {
 
   private final HikeService hikeService;
 
-  public HikeController(HikeService hikeService) {
+  public HikePostController(HikeService hikeService) {
     this.hikeService = hikeService;
   }
 
